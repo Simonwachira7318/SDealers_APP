@@ -88,10 +88,10 @@ const CategoriesScreen = () => {
                             numColumns={2}
                             style={styles.productList}
                         />
-                         <TouchableOpacity
+                        <TouchableOpacity
                             style={styles.viewAllButton}
                             onPress={() => setSelectedCategory(null)}
-                          >
+                        >
                             <Text style={styles.viewAllButtonText}>View All Categories</Text>
                         </TouchableOpacity>
                     </View>
@@ -108,13 +108,13 @@ const styles = StyleSheet.create({
     },
     container: {
         flex: 1,
-        padding: 10,
+        padding: 8, 
     },
     headerTitle: {
-        fontSize: 24,
+        fontSize: 20, 
         fontWeight: 'bold',
         color: '#333',
-        marginBottom: 20,
+        marginBottom: 12,
         textAlign: 'center',
     },
     categoryList: {
@@ -122,44 +122,45 @@ const styles = StyleSheet.create({
     },
     categoryItem: {
         flex: 1,
-        margin: 10,
-        padding: 15,
-        borderRadius: 12,
+        margin: 6,
+        padding: 10,
+        borderRadius: 8, 
         backgroundColor: 'white',
         alignItems: 'center',
         justifyContent: 'center',
         shadowColor: '#000',
-        shadowOffset: { width: 0, height: 2 },
+        shadowOffset: { width: 0, height: 1 }, 
         shadowOpacity: 0.1,
-        shadowRadius: 4,
-        elevation: 3,
+        shadowRadius: 2, 
+        elevation: 2, 
+        minHeight: 100,
     },
     categoryImage: {
-        width: 100,
-        height: 100,
-        borderRadius: 50,
-        marginBottom: 10,
+        width: 80,
+        height: 80, 
+        borderRadius: 40,
+        marginBottom: 8, 
     },
     categoryName: {
-        fontSize: 18,
+        fontSize: 14, 
         fontWeight: 'bold',
         color: '#333',
         textAlign: 'center',
     },
     productCount: {
-        fontSize: 14,
+        fontSize: 12,
         color: 'gray',
         textAlign: 'center',
     },
     selectedCategoryContainer: {
         flex: 1,
-        marginTop: 20,
+        marginTop: 16,
     },
     categoryTitle: {
-        fontSize: 22,
+        fontSize: 18,
         fontWeight: 'bold',
         color: '#2d8a8a',
-        marginBottom: 15,
+        marginBottom: 10,
         textAlign: 'center',
     },
     productList: {
@@ -167,43 +168,49 @@ const styles = StyleSheet.create({
     },
     productItem: {
         flex: 1,
-        margin: 8,
-        padding: 12,
-        borderRadius: 10,
+        margin: 6,
+        padding: 8,
+        borderRadius: 8,
         backgroundColor: 'white',
         alignItems: 'center',
         shadowColor: '#000',
-        shadowOffset: { width: 0, height: 2 },
+        shadowOffset: { width: 0, height: 1 },
         shadowOpacity: 0.1,
-        shadowRadius: 4,
-        elevation: 3,
+        shadowRadius: 2,  
+        elevation: 2,  
+        minHeight: 100,
+    },
+    productImage: {
+        width: 80,
+        height: 80,
+        borderRadius: 40,
     },
     productName: {
-        fontSize: 16,
+        fontSize: 12,
         fontWeight: 'bold',
         color: '#333',
         textAlign: 'center',
         marginTop: 5,
     },
     productPrice: {
-        fontSize: 14,
+        fontSize: 12,
         color: '#2d8a8a',
         fontWeight: 'bold',
         marginTop: 3,
     },
-      viewAllButton: {
-        marginTop: 20,
-        padding: 12,
-        borderRadius: 8,
+    viewAllButton: {
+        marginTop: 16, 
+        padding: 10, 
+        borderRadius: 6,
         backgroundColor: '#2d8a8a',
         alignItems: 'center',
         alignSelf: 'center',
-      },
-      viewAllButtonText: {
+    },
+    viewAllButtonText: {
         color: 'white',
         fontWeight: 'bold',
-        fontSize: 16,
-      },
+        fontSize: 14, 
+    },
 });
 
 export default CategoriesScreen;
