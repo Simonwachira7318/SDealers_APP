@@ -68,7 +68,7 @@ const SplashScreen = ({ navigation }) => {
         <Animated.View style={[styles.logoContainer, logoAnimationStyle]}>
           {/* splash screen logo */}
           <Image
-            source={{ uri: 'https://simonimageurl.netlify.app/images/sy1.png' }}
+            source={{ uri: 'https://simonimageurl.netlify.app/images/rider.png' }}
             style={styles.logo}
             resizeMode="contain"
           />
