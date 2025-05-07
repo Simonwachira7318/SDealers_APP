@@ -1,6 +1,6 @@
 // src/screens/auth/LoginScreen.js
 import React, { useState } from 'react';
-import { View, Text, TextInput, Button, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, TextInput, StyleSheet, TouchableOpacity } from 'react-native';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
@@ -84,14 +84,16 @@ const LoginScreen = ({ navigation }) => {
               </View>
               {errors.password && touched.password ? <Text style={styles.errorText}>{errors.password}</Text> : null}
 
-              <Button onPress={handleSubmit} title="Login" />
+              <TouchableOpacity style={styles.loginButton} onPress={handleSubmit}>
+                <Text style={styles.loginButtonText}>Login</Text>
+              </TouchableOpacity>
             </View>
           )}
         </Formik>
 
-        <Text style={styles.link} onPress={() => navigation.navigate('Signup')}>
-          Don't have an account? Sign up
-        </Text>
+        <TouchableOpacity onPress={() => navigation.navigate('Signup')} style={styles.signupLink}>
+          <Text style={styles.signupLinkText}>Don't have an account? Sign up</Text>
+        </TouchableOpacity>
       </View>
     </KeyboardAwareScrollView>
   );
@@ -106,32 +108,55 @@ const styles = StyleSheet.create({
     padding: 20,
     justifyContent: 'center'
   },
-  title: { fontSize: 24, marginBottom: 20, textAlign: 'center' },
+  title: { fontSize: 24, marginBottom: 30, textAlign: 'center', color: 'teal' },
   input: {
-    height: 40,
-    borderColor: 'gray',
+    height: 45,
+    borderColor: '#ccc',
     borderWidth: 1,
-    marginBottom: 10,
-    paddingHorizontal: 10,
+    marginBottom: 15,
+    paddingHorizontal: 15,
+    borderRadius: 8,
+    fontSize: 16,
   },
   passwordContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    borderColor: 'gray',
+    borderColor: '#ccc',
     borderWidth: 1,
-    marginBottom: 10,
+    marginBottom: 15,
+    borderRadius: 8,
   },
   passwordInput: {
     flex: 1,
-    height: 40,
-    paddingHorizontal: 10,
+    height: 45,
+    paddingHorizontal: 15,
+    fontSize: 16,
   },
   eyeIcon: {
     padding: 10,
   },
-  errorText: { color: 'red', fontSize: 12 },
-  error: { color: 'red', marginBottom: 10, textAlign: 'center' },
-  link: { marginTop: 20, color: 'blue', textAlign: 'center' },
+  errorText: { color: 'red', fontSize: 14, marginBottom: 10 },
+  error: { color: 'red', marginBottom: 20, textAlign: 'center', fontSize: 16 },
+  loginButton: {
+    backgroundColor: 'teal',
+    paddingVertical: 12,
+    borderRadius: 8,
+    alignItems: 'center',
+    marginTop: 20,
+  },
+  loginButtonText: {
+    color: 'white',
+    fontSize: 18,
+    fontWeight: 'bold',
+  },
+  signupLink: {
+    marginTop: 30,
+    alignItems: 'center',
+  },
+  signupLinkText: {
+    color: 'teal',
+    fontSize: 16,
+  },
 });
 
 export default LoginScreen;

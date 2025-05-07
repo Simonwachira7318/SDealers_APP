@@ -4,26 +4,60 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
 const SplashScreen = ({ navigation }) => {
-  const [rotation] = useState(new Animated.Value(0));
+  const [logoScale] = useState(new Animated.Value(0.8));
+  const [opacity] = useState(new Animated.Value(0));
+  const [textSlide] = useState(new Animated.Value(50));
 
   useEffect(() => {
-    Animated.loop(
-      Animated.timing(rotation, {
+    Animated.parallel([
+      Animated.timing(logoScale, {
         toValue: 1,
         duration: 1000,
-        easing: Easing.linear,
+        easing: Easing.out(Easing.ease),
         useNativeDriver: true,
-      })
-    ).start();
+      }),
+      Animated.timing(opacity, {
+        toValue: 1,
+        duration: 1200,
+        easing: Easing.easeIn,
+        useNativeDriver: true,
+      }),
+      Animated.timing(textSlide, {
+        toValue: 0,
+        duration: 1200,
+        easing: Easing.out(Easing.ease),
+        useNativeDriver: true,
+      }),
+    ]).start();
 
     const timer = setTimeout(() => {
-      navigation.replace('Home'); // Replace splash screen in navigation stack
-    }, 3000);
+      navigation.replace('Login');
+    }, 4000);
 
-    return () => clearTimeout(timer); // Clean up the timer
-  }, [navigation, rotation]);
+    return () => clearTimeout(timer);
+  }, [navigation, logoScale, opacity, textSlide]);
 
-  const spin = rotation.interpolate({
+  const logoAnimationStyle = {
+    transform: [{ scale: logoScale }],
+    opacity,
+  };
+
+  const textAnimationStyle = {
+    opacity,
+    transform: [{ translateY: textSlide }],
+  };
+
+  const spinValue = new Animated.Value(0);
+  Animated.loop(
+    Animated.timing(spinValue, {
+      toValue: 1,
+      duration: 1500,
+      easing: Easing.linear,
+      useNativeDriver: true,
+    })
+  ).start();
+
+  const spin = spinValue.interpolate({
     inputRange: [0, 1],
     outputRange: ['0deg', '360deg'],
   });
@@ -31,17 +65,21 @@ const SplashScreen = ({ navigation }) => {
   return (
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.container}>
-        <View style={styles.logoContainer}>
+        <Animated.View style={[styles.logoContainer, logoAnimationStyle]}>
           {/* splash screen logo */}
           <Image
-            source={{ uri: 'https://via.placeholder.com/150/FFFFFF/0000FF?Text=S!Dealers+Logo' }}
+            source={{ uri: 'https://simonimageurl.netlify.app/images/sy1.png' }}
             style={styles.logo}
             resizeMode="contain"
           />
-          <Text style={styles.title}>Welcome to S!Dealers</Text>
-        </View>
-        <Text style={styles.auto}>Empowering Local Commerce, Connecting Communities.</Text>
-        <Animated.View style={{ transform: [{ rotate: spin }] }}>
+          <Animated.Text style={[styles.title, textAnimationStyle]}>
+            Welcome to S!Dealers
+          </Animated.Text>
+        </Animated.View>
+        <Animated.Text style={[styles.auto, textAnimationStyle]}>
+          Empowering Local Commerce, Connecting Communities.
+        </Animated.Text>
+        <Animated.View style={{ transform: [{ rotate: spin }], opacity }}>
           <Icon name="spinner" size={40} color="white" />
         </Animated.View>
       </View>
@@ -56,7 +94,7 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
-    justifyContent: 'space-around',
+    justifyContent: 'center',
     alignItems: 'center',
     padding: 20,
   },
@@ -64,21 +102,24 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   logo: {
-    width: 150,
-    height: 150,
-    marginBottom: 20,
+    width: 180, 
+    height: 180,
+    marginBottom: 30,
   },
   title: {
-    fontSize: 24,
+    fontSize: 28, 
     fontWeight: 'bold',
     color: 'white',
     textAlign: 'center',
+    marginTop: 10,
   },
   auto: {
-    fontSize: 16,
-    color: 'white',
+    fontSize: 18,
+    color: 'rgba(255, 255, 255, 0.8)',
     textAlign: 'center',
     fontStyle: 'italic',
+    marginTop: 40,
+    marginBottom: 20,
   },
 });
 
