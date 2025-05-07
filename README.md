@@ -1,3 +1,12 @@
+### S!Dealers Ecommerce App
+
+Here are some screenshots of the app:
+
+<p align="center">
+  <img src="https://github.com/Simonwachira7318/SDealers_APP/blob/main/sdealer-client/assets/splashscreen.jpg" alt="Splash Screen" width="300">
+  <img src="https://github.com/Simonwachira7318/SDealers_APP/blob/main/sdealer-client/assets/Main%20screen.jpg" alt="Main Screen" width="300">
+</p>
+
 Expo Setup and Run Commands
 
 1.  Install Expo CLI:
@@ -47,4 +56,3 @@ Expo Setup and Run Commands
 5.  View Your App:
 
     Install the Expo Go app on your Android or iOS device. Scan the QR code from the Expo Developer Tools (opened by expo start) with the Expo Go app.
-
