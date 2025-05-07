@@ -21,13 +21,13 @@ const LoginScreen = ({ navigation }) => {
   const handleLogin = async (values) => {
     try {
       // This is just for demo - in a real app, you would call your API here
-      if (values.email === 'demo@gmail.com' && values.password === '#Pass004') {
+      if (values.email === 'demo@gmail.com' && values.password === '1234') {
         dispatch(loginSuccess({
           email: values.email,
           firstName: 'Demo',
           lastName: 'User'
         }));
-        navigation.navigate('Home');
+        navigation.navigate('Main');
       } else {
         setError('Invalid email or password');
       }
