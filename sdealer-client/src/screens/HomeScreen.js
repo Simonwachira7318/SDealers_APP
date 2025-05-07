@@ -1,15 +1,23 @@
-// src/screens/HomeScreen.js
 import React, { useEffect, useState } from 'react';
-import { View, Text, FlatList, TouchableOpacity, StyleSheet, Image } from 'react-native';
+import { View, Text, FlatList, TouchableOpacity, StyleSheet, Image, Animated } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchCategories } from '../store/productsSlice';
-import Icon from 'react-native-vector-icons/FontAwesome';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import Icon from 'react-native-vector-icons/FontAwesome5';
+import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 
 const HomeScreen = ({ navigation }) => {
   const dispatch = useDispatch();
   const { categories, loading, error } = useSelector(state => state.products);
   const [isUsingDummyData, setIsUsingDummyData] = useState(true);
+  const [activeTab, setActiveTab] = useState('Home');
+  const insets = useSafeAreaInsets();
+  const [animatedValues] = useState({
+    Home: new Animated.Value(1),
+    Categories: new Animated.Value(1),
+    Cart: new Animated.Value(1),
+    Account: new Animated.Value(1),
+    'Customer Care': new Animated.Value(1),
+  });
 
   const dummyCategories = [
     { id: 1, name: 'Electronics', image: 'https://images.unsplash.com/photo-1574144659703-1659dda2e0b1?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8c21hcnQlMjBzY3JlZW5zfGVufDB8fDB8fHww' },
@@ -44,31 +52,40 @@ const HomeScreen = ({ navigation }) => {
     </TouchableOpacity>
   );
 
+  const handleTabPress = (tabName) => {
+    setActiveTab(tabName);
+    Animated.spring(animatedValues[tabName], {
+      toValue: 1.05,
+      useNativeDriver: true,
+    }).start(() => {
+      Animated.spring(animatedValues[tabName], {
+        toValue: 1,
+        useNativeDriver: true,
+      }).start();
+    });
+  };
+
   if (loading && !isUsingDummyData) {
     return (
-      <SafeAreaView style={styles.safeArea}>
-        <View style={styles.container}>
-          <Text>Loading...</Text>
-        </View>
-      </SafeAreaView>
+      <View style={styles.loadingContainer}>
+        <Text>Loading...</Text>
+      </View>
     );
   }
 
   if (error && !isUsingDummyData) {
     return (
-      <SafeAreaView style={styles.safeArea}>
-        <View style={styles.container}>
-          <Text style={styles.error}>{error}</Text>
-        </View>
-      </SafeAreaView>
+      <View style={styles.errorContainer}>
+        <Text style={styles.error}>{error}</Text>
+      </View>
     );
   }
 
   const dataSource = isUsingDummyData ? dummyCategories : categories;
 
   return (
-    <SafeAreaView style={styles.safeArea}>
-      <View style={styles.container}>
+    <View style={styles.container}>
+      <SafeAreaView style={styles.safeArea}>
         <View style={styles.header}>
           <Text style={styles.title}>Shop by Category</Text>
           <TouchableOpacity onPress={handleToggleDataSource} style={styles.dataSourceButton}>
@@ -83,24 +100,93 @@ const HomeScreen = ({ navigation }) => {
           numColumns={2}
           contentContainerStyle={styles.list}
         />
+      </SafeAreaView>
+
+      {/* Bottom Menu */}
+      <View style={[styles.bottomMenu, { bottom: insets.bottom }]}>
+        {['Home', 'Categories', 'Cart', 'Account', 'Customer Care'].map(tabName => {
+          let iconName = '';
+          switch (tabName) {
+            case 'Home':
+              iconName = 'home';
+              break;
+            case 'Categories':
+              iconName = 'list-ul';
+              break;
+            case 'Cart':
+              iconName = 'shopping-cart';
+              break;
+            case 'Account':
+              iconName = 'user';
+              break;
+            case 'Customer Care':
+              iconName = 'headset';
+              break;
+            default:
+              iconName = 'question';
+          }
+
+          return (
+            <TouchableOpacity
+              key={tabName}
+              style={styles.menuItem}
+              onPress={() => handleTabPress(tabName)}
+            >
+              <Animated.View style={{ transform: [{ scale: animatedValues[tabName] }] }}>
+                <Icon
+                  name={iconName}
+                  size={20}
+                  color={activeTab === tabName ? 'white' : 'rgba(255,255,255,0.7)'}
+                />
+              </Animated.View>
+              <Text
+                style={{
+                  color: activeTab === tabName ? 'white' : 'rgba(255,255,255,0.7)',
+                  fontSize: 12,
+                  marginTop: 3,
+                  textAlign: 'center'
+                }}
+              >
+                {tabName}
+              </Text>
+            </TouchableOpacity>
+          );
+        })}
       </View>
-    </SafeAreaView>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#2d8a8ad6',
+  },
   safeArea: {
     flex: 1,
+    backgroundColor: 'trasparent',
   },
-  container: { flex: 1, padding: 10 },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'teal',
+  },
+  errorContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'teal',
+  },
   header: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
     marginBottom: 10,
+    paddingHorizontal: 10,
   },
-  title: { fontSize: 20, fontWeight: 'bold', marginVertical: 10 },
-  list: { paddingBottom: 20 },
+  title: { fontSize: 20, fontWeight: 'bold', marginVertical: 10, color: 'white' }, // Title color
+  list: { paddingBottom: 70, paddingHorizontal: 10 }, // Space for bottom menu, and horizontal padding
   categoryCard: {
     flex: 1,
     margin: 5,
@@ -110,7 +196,7 @@ const styles = StyleSheet.create({
     padding: 10,
   },
   categoryImage: { width: 100, height: 100, borderRadius: 50 },
-  categoryName: { marginTop: 10, fontWeight: '600' },
+  categoryName: { marginTop: 10, fontWeight: '600', color: '#333' },
   error: { color: 'red', textAlign: 'center', marginTop: 20 },
   dataSourceButton: {
     flexDirection: 'row',
@@ -123,6 +209,22 @@ const styles = StyleSheet.create({
     marginLeft: 5,
     fontSize: 12,
     color: 'gray',
+  },
+  bottomMenu: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    height: 56,
+    backgroundColor: 'teal',
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    alignItems: 'center',
+    borderTopWidth: 0,
+  },
+  menuItem: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 });
 
