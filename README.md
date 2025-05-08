@@ -3,13 +3,13 @@
 Here are some screenshots of the app:
 
 <p align="center">
-  <img src="https://github.com/Simonwachira7318/SDealers_APP/blob/main/sdealer-client/assets/splashscreen.jpg" alt="Splash Screen" width="300">
-  <img src="https://github.com/Simonwachira7318/SDealers_APP/blob/main/sdealer-client/assets/Main%20screen.jpg" alt="Main Screen" width="300">
-  <img src="https://github.com/Simonwachira7318/SDealers_APP/blob/main/sdealer-client/assets/cart.jpg" alt="Cart Screen" width="300">
-  <img src="https://github.com/Simonwachira7318/SDealers_APP/blob/main/sdealer-client/assets/checkout.jpg" alt="Checkout Screen" width="300">
-  <img src="https://github.com/Simonwachira7318/SDealers_APP/blob/main/sdealer-client/assets/orderconfirm.jpg" alt="Order Confirmation Screen" width="300">
-  <img src="https://github.com/Simonwachira7318/SDealers_APP/blob/main/sdealer-client/assets/tracking.jpg" alt="Order Tracking Screen" width="300">
-  <img src="https://github.com/Simonwachira7318/SDealers_APP/blob/main/sdealer-client/assets/support.jpg" alt="Support Screen" width="300">
+  <img src="https://github.com/Simonwachira7318/SDealers_APP/blob/main/sdealer-client/assets/splashscreen.jpg" alt="Splash Screen" width="200">
+  <img src="https://github.com/Simonwachira7318/SDealers_APP/blob/main/sdealer-client/assets/Main%20screen.jpg" alt="Main Screen" width="200">
+  <img src="https://github.com/Simonwachira7318/SDealers_APP/blob/main/sdealer-client/assets/cart.jpg" alt="Cart Screen" width="200">
+  <img src="https://github.com/Simonwachira7318/SDealers_APP/blob/main/sdealer-client/assets/checkout.jpg" alt="Checkout Screen" width="200">
+  <img src="https://github.com/Simonwachira7318/SDealers_APP/blob/main/sdealer-client/assets/orderconfirm.jpg" alt="Order Confirmation Screen" width="200">
+  <img src="https://github.com/Simonwachira7318/SDealers_APP/blob/main/sdealer-client/assets/tracking.jpg" alt="Order Tracking Screen" width="200">
+  <img src="https://github.com/Simonwachira7318/SDealers_APP/blob/main/sdealer-client/assets/support.jpg" alt="Support Screen" width="200">
 </p>
 
 Expo Setup and Run Commands
