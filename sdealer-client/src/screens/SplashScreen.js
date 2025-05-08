@@ -24,7 +24,8 @@ const SplashScreen = ({ navigation }) => {
     const [progress] = useState(new Animated.Value(0));
     const [showButton, setShowButton] = useState(false);
     const [cartAnimation] = useState(new Animated.Value(0));
-
+    const timeoutRef = useRef(null);
+    const hasNavigated = useRef(false);
 
     // Particle effects
     const particleCount = 15;
@@ -57,7 +58,15 @@ const SplashScreen = ({ navigation }) => {
     });
 
     useEffect(() => {
-        // Sequence of animations
+        // Sequence of animations for progress
+        const progressAnimation = Animated.timing(progress, {
+            toValue: 100,
+            duration: 3000,
+            easing: Easing.linear,
+            useNativeDriver: false,
+        });
+
+        // Sequence of main animations
         Animated.sequence([
             // Logo bounce in
             Animated.parallel([
@@ -99,33 +108,27 @@ const SplashScreen = ({ navigation }) => {
                 }),
             ]),
 
-            // Progress loader
-            Animated.timing(progress, {
-                toValue: 100,
-                duration: 3000,
-                easing: Easing.linear,
-                useNativeDriver: false,
-            }),
-        ]).start();
+            // Run the progress animation
+            progressAnimation,
 
-        // Show button after animations complete
-        const buttonTimer = setTimeout(() => {
+        ]).start(() => {
+            // Show button after animations complete
             setShowButton(true);
-        }, 3500);
-
-        // Auto navigation after 6 seconds
-        const navTimer = setTimeout(() => {
-            if (!showButton) {
-                navigation.replace('Login');
-            }
-        }, 6000);
+            // Auto navigation
+            timeoutRef.current = setTimeout(() => {
+                if (!hasNavigated.current) {
+                    navigation.replace('Login');
+                }
+            }, 9000);
+        });
 
         return () => {
-            clearTimeout(buttonTimer);
-            clearTimeout(navTimer);
+            // Clear the timeout when component unmounts
+            if (timeoutRef.current) {
+                clearTimeout(timeoutRef.current);
+            }
         };
-    }, [navigation, logoScale, opacity, textSlide, logoPosition, progress, showButton]);
-
+    }, [navigation, logoScale, opacity, textSlide, logoPosition, progress]);
 
     const logoAnimationStyle = {
         transform: [
@@ -145,6 +148,10 @@ const SplashScreen = ({ navigation }) => {
     });
 
     const handleGetStarted = () => {
+        hasNavigated.current = true;
+        if (timeoutRef.current) {
+            clearTimeout(timeoutRef.current);
+        }
         navigation.replace('Login');
     };
 
@@ -238,17 +245,11 @@ const SplashScreen = ({ navigation }) => {
                         </Animated.Text>
                     </View>
 
-                    {/* Progress bar with percentage */}
+                    {/* Progress bar */}
                     <View style={styles.progressWrapper}>
                         <View style={styles.progressContainer}>
                             <Animated.View style={[styles.progressBar, { width: progressWidth }]} />
                         </View>
-                        <Animated.Text style={styles.progressText}>
-                            {progress.interpolate({
-                                inputRange: [0, 100],
-                                outputRange: ['0%', '100%']
-                            })}
-                        </Animated.Text>
                     </View>
 
                     {/* Loading dots animation */}
@@ -260,13 +261,13 @@ const SplashScreen = ({ navigation }) => {
                                     styles.dot,
                                     {
                                         opacity: progress.interpolate({
-                                            inputRange: [0 + (i * 30), 30 + (i * 30)],
+                                            inputRange: [0 + (i * (3000 / 3)), (3000 / 3) + (i * (3000 / 3))],
                                             outputRange: [0.3, 1],
                                             extrapolate: 'clamp'
                                         }),
                                         transform: [{
                                             scale: progress.interpolate({
-                                                inputRange: [0 + (i * 30), 30 + (i * 30)],
+                                                inputRange: [0 + (i * (3000 / 3)), (3000 / 3) + (i * (3000 / 3))],
                                                 outputRange: [0.7, 1.2],
                                                 extrapolate: 'clamp'
                                             })
@@ -309,7 +310,7 @@ const styles = StyleSheet.create({
         flex: 1,
     },
     background: {
-        backgroundColor: 'teal', 
+        backgroundColor: 'teal',
     },
     safeArea: {
         flex: 1,
@@ -373,7 +374,7 @@ const styles = StyleSheet.create({
         textShadowRadius: 3,
     },
     brand: {
-        color: 'black', 
+        color: 'black',
     },
     subtitleContainer: {
         marginBottom: 40,
@@ -405,11 +406,6 @@ const styles = StyleSheet.create({
         borderRadius: 3,
         borderWidth: 1,
         borderColor: 'rgba(255,255,255,0.5)'
-    },
-    progressText: {
-        color: 'white',
-        fontSize: 12,
-        minWidth: 35,
     },
     dotsContainer: {
         flexDirection: 'row',
