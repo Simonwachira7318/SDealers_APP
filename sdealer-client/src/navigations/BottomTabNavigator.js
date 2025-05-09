@@ -44,7 +44,9 @@ export default function BottomTabNavigator() {
         tabBarStyle: {
           backgroundColor: 'teal',
           borderTopWidth: 0,
-          height: 64,
+          height: 80,
+          paddingTop: 5,
+          paddingBottom: 10,
         },
         tabBarLabelStyle: {
           fontSize: 10,

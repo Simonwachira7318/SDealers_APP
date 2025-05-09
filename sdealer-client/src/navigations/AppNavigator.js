@@ -20,7 +20,6 @@ export default function AppNavigator() {
         <Stack.Screen name="Splash" component={SplashScreen} />
         <Stack.Screen name="Login" component={LoginScreen} />
         <Stack.Screen name="Signup" component={SignupScreen} />
-        {/* <Stack.Screen name="Home" component={HomeScreen} options={{ headerShown: false }}/> */}
         <Stack.Screen name="Main" component={BottomTabNavigator} />
         <Stack.Screen name="ProductDetail" component={ProductDetailScreen} />
         <Stack.Screen name="Cart" component={CartScreen} />

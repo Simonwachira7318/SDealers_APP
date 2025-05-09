@@ -124,8 +124,11 @@ const styles = StyleSheet.create({
         backgroundColor: '#f8fafc',
     },
     header: {
-        backgroundColor: '#0d9488',
-        paddingVertical: 20,
+        backgroundColor: 'teal',
+        paddingTop: 45,
+        paddingBottom: 20,
+        borderBottomLeftRadius: 5,
+        borderBottomRightRadius: 5,
         paddingHorizontal: 16,
         shadowColor: '#000',
         shadowOffset: { width: 0, height: 4 },
