@@ -1,9 +1,7 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, Image, TouchableOpacity, FlatList } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { View, Text, StyleSheet, Image, TouchableOpacity, FlatList, SafeAreaView, Animated } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 
-// Dummy data (replace with your actual data)
 const dummyCategories = [
     { id: 1, name: 'Electronics', image: 'https://images.unsplash.com/photo-1574144659703-1659dda2e0b1?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8c21hcnQlMjBzY3JlZW5zfGVufDB8fDB8fHww' },
     { id: 2, name: 'Clothing', image: 'https://images.unsplash.com/photo-1525507119028-ed4c629a60a3?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8Y2xvdGhpbmdzfGVufDB8fDB8fHww' },
@@ -33,9 +31,20 @@ const dummyProducts = [
 const CategoriesScreen = () => {
     const [selectedCategory, setSelectedCategory] = useState(null);
     const navigation = useNavigation();
+    const fadeAnim = useState(new Animated.Value(0))[0];
 
     const getProductsByCategory = (categoryName) => {
         return dummyProducts.filter(product => product.category === categoryName);
+    };
+
+    const handleCategoryPress = (categoryName) => {
+        setSelectedCategory(categoryName);
+        fadeAnim.setValue(0);
+        Animated.timing(fadeAnim, {
+            toValue: 1,
+            duration: 500,
+            useNativeDriver: true
+        }).start();
     };
 
     const renderCategoryItem = ({ item }) => {
@@ -44,11 +53,11 @@ const CategoriesScreen = () => {
         return (
             <TouchableOpacity
                 style={styles.categoryItem}
-                onPress={() => {
-                    setSelectedCategory(item.name);
-                }}
+                onPress={() => handleCategoryPress(item.name)}
             >
-                <Image source={{ uri: item.image }} style={styles.categoryImage} />
+                <View style={styles.categoryImageContainer}>
+                    <Image source={{ uri: item.image }} style={styles.categoryImage} />
+                </View>
                 <Text style={styles.categoryName}>{item.name}</Text>
                 <Text style={styles.productCount}>{productsInCategory.length} Products</Text>
             </TouchableOpacity>
@@ -56,47 +65,55 @@ const CategoriesScreen = () => {
     };
 
     const renderProductItem = ({ item }) => (
-        <TouchableOpacity
-            style={styles.productItem}
-            onPress={() => navigation.navigate('ProductDetail', { productId: item.id })} // Navigate to ProductDetail
-        >
-            <Image source={{ uri: item.image }} style={styles.productImage} />
-            <Text style={styles.productName}>{item.name}</Text>
-            <Text style={styles.productPrice}>${item.price}</Text>
-        </TouchableOpacity>
+        <Animated.View style={{ opacity: fadeAnim }}>
+            <TouchableOpacity
+                style={styles.productItem}
+                onPress={() => navigation.navigate('ProductDetail', { productId: item.id })}
+            >
+                <Image source={{ uri: item.image }} style={styles.productImage} />
+                <Text style={styles.productName}>{item.name}</Text>
+                <Text style={styles.productPrice}>${item.price}</Text>
+            </TouchableOpacity>
+        </Animated.View>
     );
 
     return (
         <SafeAreaView style={styles.safeArea}>
-            <View style={styles.container}>
-                <Text style={styles.headerTitle}>Categories</Text>
+            <View style={styles.header}>
+                <Text style={styles.headerTitle}>Shop Categories</Text>
+            </View>
+
+            {!selectedCategory ? (
                 <FlatList
                     data={dummyCategories}
                     renderItem={renderCategoryItem}
                     keyExtractor={(item) => item.id.toString()}
                     numColumns={2}
-                    style={styles.categoryList}
+                    contentContainerStyle={styles.categoryList}
+                    showsVerticalScrollIndicator={false}
                 />
-
-                {selectedCategory && (
-                    <View style={styles.selectedCategoryContainer}>
-                        <Text style={styles.categoryTitle}>{selectedCategory}</Text>
-                        <FlatList
-                            data={getProductsByCategory(selectedCategory)}
-                            renderItem={renderProductItem}
-                            keyExtractor={(item) => item.id.toString()}
-                            numColumns={2}
-                            style={styles.productList}
-                        />
-                        <TouchableOpacity
-                            style={styles.viewAllButton}
+            ) : (
+                <Animated.View style={[styles.selectedCategoryContainer, { opacity: fadeAnim }]}>
+                    <View style={styles.categoryHeader}>
+                        <TouchableOpacity 
+                            style={styles.backButton} 
                             onPress={() => setSelectedCategory(null)}
                         >
-                            <Text style={styles.viewAllButtonText}>View All Categories</Text>
+                            <Text style={styles.backButtonText}>←</Text>
                         </TouchableOpacity>
+                        <Text style={styles.categoryTitle}>{selectedCategory}</Text>
                     </View>
-                )}
-            </View>
+                    
+                    <FlatList
+                        data={getProductsByCategory(selectedCategory)}
+                        renderItem={renderProductItem}
+                        keyExtractor={(item) => item.id.toString()}
+                        numColumns={2}
+                        contentContainerStyle={styles.productList}
+                        showsVerticalScrollIndicator={false}
+                    />
+                </Animated.View>
+            )}
         </SafeAreaView>
     );
 };
@@ -104,112 +121,136 @@ const CategoriesScreen = () => {
 const styles = StyleSheet.create({
     safeArea: {
         flex: 1,
-        backgroundColor: '#f0f0f0',
+        backgroundColor: '#f8fafc',
     },
-    container: {
-        flex: 1,
-        padding: 8, 
+    header: {
+        backgroundColor: '#0d9488',
+        paddingVertical: 20,
+        paddingHorizontal: 16,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 0.1,
+        shadowRadius: 10,
+        elevation: 5,
+        marginBottom: 10,
     },
     headerTitle: {
-        fontSize: 20, 
+        fontSize: 24,
         fontWeight: 'bold',
-        color: '#333',
-        marginBottom: 12,
+        color: '#fff',
         textAlign: 'center',
+        letterSpacing: 0.5,
     },
     categoryList: {
-        flexGrow: 1,
+        paddingHorizontal: 12,
+        paddingBottom: 20,
     },
     categoryItem: {
         flex: 1,
-        margin: 6,
-        padding: 10,
-        borderRadius: 8, 
-        backgroundColor: 'white',
+        margin: 8,
+        padding: 16,
+        borderRadius: 16,
+        backgroundColor: '#fff',
         alignItems: 'center',
         justifyContent: 'center',
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 1 }, 
+        shadowColor: '#0d9488',
+        shadowOffset: { width: 0, height: 6 },
         shadowOpacity: 0.1,
-        shadowRadius: 2, 
-        elevation: 2, 
-        minHeight: 100,
+        shadowRadius: 8,
+        elevation: 5,
+        borderWidth: 1,
+        borderColor: '#e2e8f0',
+    },
+    categoryImageContainer: {
+        width: 80,
+        height: 80,
+        borderRadius: 40,
+        backgroundColor: '#f0fdfa',
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginBottom: 12,
+        padding: 10,
+        borderWidth: 2,
+        borderColor: '#ccfbf1',
     },
     categoryImage: {
-        width: 80,
-        height: 80, 
-        borderRadius: 40,
-        marginBottom: 8, 
+        width: '100%',
+        height: '100%',
+        resizeMode: 'contain',
     },
     categoryName: {
-        fontSize: 14, 
-        fontWeight: 'bold',
-        color: '#333',
+        fontSize: 16,
+        fontWeight: '600',
+        color: '#0f766e',
         textAlign: 'center',
+        marginBottom: 4,
     },
     productCount: {
         fontSize: 12,
-        color: 'gray',
+        color: '#64748b',
         textAlign: 'center',
     },
     selectedCategoryContainer: {
         flex: 1,
-        marginTop: 16,
+        paddingHorizontal: 12,
+    },
+    categoryHeader: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        marginBottom: 16,
+        paddingHorizontal: 8,
+    },
+    backButton: {
+        padding: 8,
+        marginRight: 12,
+    },
+    backButtonText: {
+        fontSize: 24,
+        color: '#0d9488',
+        fontWeight: 'bold',
     },
     categoryTitle: {
-        fontSize: 18,
+        fontSize: 22,
         fontWeight: 'bold',
-        color: '#2d8a8a',
-        marginBottom: 10,
+        color: '#0f766e',
+        flex: 1,
         textAlign: 'center',
     },
     productList: {
-        flexGrow: 1,
+        paddingBottom: 20,
     },
     productItem: {
         flex: 1,
-        margin: 6,
-        padding: 8,
-        borderRadius: 8,
-        backgroundColor: 'white',
+        margin: 8,
+        padding: 16,
+        borderRadius: 12,
+        backgroundColor: '#fff',
         alignItems: 'center',
         shadowColor: '#000',
-        shadowOffset: { width: 0, height: 1 },
+        shadowOffset: { width: 0, height: 3 },
         shadowOpacity: 0.1,
-        shadowRadius: 2,  
-        elevation: 2,  
-        minHeight: 100,
+        shadowRadius: 6,
+        elevation: 3,
+        borderWidth: 1,
+        borderColor: '#e2e8f0',
     },
     productImage: {
         width: 80,
         height: 80,
-        borderRadius: 40,
+        resizeMode: 'contain',
+        marginBottom: 12,
     },
     productName: {
-        fontSize: 12,
-        fontWeight: 'bold',
-        color: '#333',
+        fontSize: 14,
+        fontWeight: '600',
+        color: '#334155',
         textAlign: 'center',
-        marginTop: 5,
+        marginBottom: 4,
     },
     productPrice: {
-        fontSize: 12,
-        color: '#2d8a8a',
+        fontSize: 16,
         fontWeight: 'bold',
-        marginTop: 3,
-    },
-    viewAllButton: {
-        marginTop: 16, 
-        padding: 10, 
-        borderRadius: 6,
-        backgroundColor: '#2d8a8a',
-        alignItems: 'center',
-        alignSelf: 'center',
-    },
-    viewAllButtonText: {
-        color: 'white',
-        fontWeight: 'bold',
-        fontSize: 14, 
+        color: '#0d9488',
     },
 });
 

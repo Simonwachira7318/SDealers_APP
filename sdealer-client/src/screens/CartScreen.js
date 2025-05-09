@@ -182,7 +182,7 @@ const CartScreen = ({ navigation }) => {
                     <Text style={styles.emptyCartSubtext}>Looks like you haven't added anything to your cart yet</Text>
                     <TouchableOpacity
                         style={styles.continueShoppingButton}
-                        onPress={() => navigation.navigate('Home')}
+                        onPress={() => navigation.navigate('Main')}
                     >
                         <Text style={styles.continueShoppingText}>Continue Shopping</Text>
                         <Icon name="long-arrow-alt-right" size={16} color="#fff" style={styles.shoppingIcon} />
